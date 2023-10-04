@@ -1,19 +1,9 @@
 from selenium.webdriver.common.by import By
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from os.path import join, dirname
-from dotenv import load_dotenv
-import os
+from notification import notify
 import json
 import time
-import logging
-import requests
-
-dotenv_path = join(dirname(__file__), '.env')
-load_dotenv(dotenv_path)
-
-TOKEN = os.environ.get("BOT_TOKEN")
-ID = os.environ.get("CHAT_ID")
 
 INTERVAL_IN_SECONDS = 300
 
@@ -24,7 +14,7 @@ def get_latest_chapter(driver, series_name):
 def main():
     start = time.time()
     file_path = "latest-updates.json"
-    link = "https://tcbscans.com/?date=22-9-2023-13"
+    link = "https://tcbscans.com/"
 
     options = Options()
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
@@ -34,9 +24,9 @@ def main():
         driver.get(link)
 
         latest_chapters = {
-            'mha': get_latest_chapter(driver, "My Hero"),
-            'jjk': get_latest_chapter(driver, "Jujutsu "),
-            'op': get_latest_chapter(driver, "One Piece")
+            'MHA': get_latest_chapter(driver, "My Hero"),
+            'JJK': get_latest_chapter(driver, "Jujutsu "),
+            'OP': get_latest_chapter(driver, "One Piece")
         }
 
     with open(file_path, 'r', encoding='utf-8') as json_file:
@@ -53,18 +43,7 @@ def main():
         with open(file_path, 'w', encoding='utf-8') as json_file:
             json.dump(chapters, json_file)
     end = time.time()
-    print(end -start)
-
-
-def notify(title: str, chapter:str):
-    apiURL = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
-    message = f'new chapter {chapter} for {title} has dropped!'
-
-    try:
-        response = requests.post(apiURL, json={'chat_id': ID, 'text': message})
-        logging.info(response.text)
-    except Exception as e:
-        logging.error(e)
+    print(end - start)
 
 if __name__ == "__main__":
     while True:
