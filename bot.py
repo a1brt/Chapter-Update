@@ -2,7 +2,6 @@ TOKEN = "6315511699:AAGquUxZkmx0eJqQjjoYBmrwMg-VufmKejg"
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, CallbackQueryHandler
-import requests
 import mongodb 
 
 def get_markup(user_data):
