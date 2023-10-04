@@ -5,16 +5,6 @@ from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, Callb
 import requests
 import mongodb 
 
-
-def send_to_telegram(message):
-    apiURL = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
-
-    try:
-        response = requests.post(apiURL, json={'chat_id': ID, 'text': message})
-        print(response.text)
-    except Exception as e:
-        print(e)
-
 def get_markup(user_data):
     return [
         [
@@ -24,7 +14,6 @@ def get_markup(user_data):
         ],
         [InlineKeyboardButton("Done", callback_data="0")]
     ]
-
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not mongodb.get_by_chat_id(update.effective_chat.id):
