@@ -1,8 +1,14 @@
-TOKEN = "6315511699:AAGquUxZkmx0eJqQjjoYBmrwMg-VufmKejg"
-
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, CallbackQueryHandler
+from os.path import join, dirname
+from os import environ
+from dotenv import load_dotenv
 import mongodb 
+
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
+
+TOKEN = environ.get("BOT_TOKEN")
 
 def get_markup(user_data):
     return [
