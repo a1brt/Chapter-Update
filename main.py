@@ -2,7 +2,7 @@ from selenium.webdriver.common.by import By
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from notification import notify
-import json
+from mongodb import get_chapters, update_latest_chapter
 import time
 
 INTERVAL_IN_SECONDS = 120
@@ -13,7 +13,6 @@ def get_latest_chapter(driver, series_name):
 
 def main():
     start = time.time()
-    file_path = "latest-updates.json"
     link = "https://tcbscans.com/"
 
     options = Options()
@@ -29,19 +28,13 @@ def main():
             'OP': get_latest_chapter(driver, "One Piece")
         }
 
-    with open(file_path, 'r', encoding='utf-8') as json_file:
-        chapters = json.load(json_file)
+    chapters = get_chapters()
 
-    updated = False
     for name, chapter in latest_chapters.items():
         if chapter != chapters.get(name):
-            chapters[name] = chapter
+            update_latest_chapter(name, chapter)
             notify(name,chapter)
-            updated = True
 
-    if updated:
-        with open(file_path, 'w', encoding='utf-8') as json_file:
-            json.dump(chapters, json_file)
     end = time.time()
     print(f"{time.strftime('%H:%M:%S', time.localtime())}: {end - start}")
 
