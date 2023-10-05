@@ -5,7 +5,7 @@ from notification import notify
 import json
 import time
 
-INTERVAL_IN_SECONDS = 300
+INTERVAL_IN_SECONDS = 120
 
 def get_latest_chapter(driver, series_name):
     element = driver.find_element(By.PARTIAL_LINK_TEXT, series_name)
@@ -43,7 +43,7 @@ def main():
         with open(file_path, 'w', encoding='utf-8') as json_file:
             json.dump(chapters, json_file)
     end = time.time()
-    print(end - start)
+    print(f"{time.strftime('%H:%M:%S', time.localtime())}: {end - start}")
 
 if __name__ == "__main__":
     while True:
