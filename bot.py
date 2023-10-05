@@ -30,6 +30,16 @@ async def sub_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text("Choose titles to subscribe:", reply_markup=reply_markup)
 
+async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    sub_command = "/sub - choose title to subcribe to. To unubsctibe enter the command and choose again or just click done \n" 
+    del_command = "/del - delete this chat information. You will not recive any further updates and your information won't be kept"
+    text = sub_command+del_command
+    await update.message.reply_text(text)
+
+async def del_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    mongodb.delete_by_chat_id(update.effective_chat.id)
+    await update.message.reply_photo(open("./assets/del.jpg",'rb'))
+
 async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.callback_query
 
@@ -47,9 +57,14 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 def main():
     application = ApplicationBuilder().token(TOKEN).build()
+
     start_handler = CommandHandler('start', start_command)
     sub_handler = CommandHandler('sub', sub_command)
-    application.add_handlers([start_handler, sub_handler])
+    help_handler = CommandHandler('help', help_command)
+    del_handler = CommandHandler('del', del_command)
+
+    application.add_handlers([start_handler, sub_handler,help_handler,del_handler])
+
     application.add_handler(CallbackQueryHandler(button))
     application.run_polling()
 
