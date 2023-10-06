@@ -23,7 +23,8 @@ def get_markup(user_data):
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not mongodb.get_by_chat_id(update.effective_chat.id):
         mongodb.save_user_info(update.effective_chat.id)
-    await context.bot.send_message(chat_id=update.effective_chat.id, text = "Hi this is a bot for getting manga updates from website tcbscans.com")
+    text = "Hi this is a bot for getting manga updates from website tcbscans.com. Enter /help to see available commands"
+    await context.bot.send_message(chat_id=update.effective_chat.id, text = text)
 
 async def sub_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reply_markup = InlineKeyboardMarkup(get_markup({}))
