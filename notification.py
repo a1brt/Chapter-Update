@@ -1,5 +1,4 @@
-import logging
-import requests
+import grequests
 from mongodb import get_title_subscribers
 from os.path import join, dirname
 from os import environ
@@ -13,10 +12,6 @@ TOKEN = environ.get("BOT_TOKEN")
 def notify(title: str, chapter:str):
     apiURL = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
     message = f'New chapter {chapter} for {title} has dropped!'
-    subscriber_ids =  get_title_subscribers(title)
-    for id in subscriber_ids:
-        try:
-            response = requests.post(apiURL, json={'chat_id': id, 'text': message})
-            logging.info(response.text)
-        except Exception as e:
-            logging.error(e)
+    subscriber_ids = get_title_subscribers(title)
+    rs = (grequests.post(apiURL, json={'chat_id': id, 'text': message}) for id in subscriber_ids)
+    grequests.map(rs)

@@ -1,7 +1,7 @@
+from notification import notify
 from selenium.webdriver.common.by import By
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from notification import notify
 from mongodb import get_chapters, update_latest_chapter
 from decorators import timer, delay
 import asyncio
