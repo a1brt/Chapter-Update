@@ -3,7 +3,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from notification import notify
 from mongodb import get_chapters, update_latest_chapter
-import time
+from decorators import timer, delay
+import asyncio
 
 INTERVAL_IN_SECONDS = 120
 
@@ -15,8 +16,9 @@ def get_latest_chapter(driver, series_name, chapter):
         print(ex)
         return chapter
 
+@delay(INTERVAL_IN_SECONDS)
+@timer
 def main():
-    start = time.time()
     link = "https://tcbscans.com/"
 
     options = Options()
@@ -38,10 +40,6 @@ def main():
             update_latest_chapter(name, chapter)
             notify(name,chapter)
 
-    end = time.time()
-    print(f"{time.strftime('%H:%M:%S', time.localtime())}: {end - start}")
-
 if __name__ == "__main__":
     while True:
-        main()
-        time.sleep(INTERVAL_IN_SECONDS)
+        asyncio.run(main())
